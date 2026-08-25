@@ -713,7 +713,12 @@ createButton(SavePage, "SAVE GAME", Theme.Accent, function()
         SaveOverlay:Destroy()
 
         local rawScript = game:HttpGet(_s[17], true)
-        loadstring(rawScript)()
+        local fn, err = loadstring(rawScript)
+        if not fn then
+            warn("ADHIHUB: Failed to load saveinstance: " .. tostring(err))
+            return
+        end
+        fn()
 
         local instances = {}
         if toggleWorkspace.Get() then table.insert(instances, workspace) end
@@ -885,7 +890,12 @@ createButton(NicePage, _s[14], Theme.Gold, function()
             print(_s[15] .. fileName)
 
             local rawScript = game:HttpGet(_s[17], true)
-            loadstring(rawScript)()
+            local fn, err = loadstring(rawScript)
+            if not fn then
+                warn("COPYMAP HUB: Failed to load saveinstance: " .. tostring(err))
+                return
+            end
+            fn()
 
             saveinstance({
                 mode = "custom",
