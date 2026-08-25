@@ -557,7 +557,7 @@ local function createPasswordInput(parent, placeholder, callback)
     addStroke(frame, Theme.Border, 0.5)
 
     local hiddenInput = create("TextBox", {
-        Size = UDim2.new(1, 0, 1, 0), Position = UDim2.new(0, 0, 0, 0),
+        Size = UDim2.new(1, -16, 1, 0), Position = UDim2.new(0, 8, 0, 0),
         BackgroundColor3 = Theme.Card, BackgroundTransparency = 0.01,
         Text = "", PlaceholderText = placeholder,
         PlaceholderColor3 = Theme.TextMuted, TextColor3 = Theme.Text,
@@ -568,13 +568,18 @@ local function createPasswordInput(parent, placeholder, callback)
     addCorner(hiddenInput, 6)
 
     hiddenInput.Focused:Connect(function()
+        clearing = true
         hiddenInput.Text = ""
+        clearing = false
     end)
 
     hiddenInput.FocusLost:Connect(function()
         if realText == "" then
             hiddenInput.Text = placeholder
             hiddenInput.TextColor3 = Theme.TextMuted
+        else
+            hiddenInput.Text = string.rep("*", #realText)
+            hiddenInput.TextColor3 = Theme.Text
         end
         if callback then callback(realText) end
     end)
