@@ -26,10 +26,20 @@ local _0x4F = {
 {92,24,4,27},
 }
 
+local _xor = function(a, b)
+    local r, p = 0, 1
+    for i = 0, 7 do
+        if (a % 2) ~= (b % 2) then r = r + p end
+        a, b = math.floor(a / 2), math.floor(b / 2)
+        p = p * 2
+    end
+    return r
+end
+
 local _0x7A = function(_0x1)
     local _0x2 = {}
     for _0x3 = 1, #_0x1 do
-        _0x2[_0x3] = string.char(_0x1[_0x3] ~ 42)
+        _0x2[_0x3] = string.char(_xor(_0x1[_0x3], 42))
     end
     return table.concat(_0x2)
 end
