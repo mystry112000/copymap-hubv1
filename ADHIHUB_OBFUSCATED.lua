@@ -682,7 +682,7 @@ createButton(SavePage, "SAVE GAME", Theme.Accent, function()
     SavePassInput.Frame.Size = UDim2.new(1, -40, 0, 38)
     SavePassInput.Frame.ZIndex = 102
     for _, c in ipairs(SavePassInput.Frame:GetChildren()) do
-        c.ZIndex = 102
+        if c:IsA("GuiObject") then c.ZIndex = 102 end
     end
 
     local SavePassStatus = create("TextLabel", {
@@ -797,7 +797,7 @@ createButton(NicePage, _s[14], Theme.Gold, function()
     PassInput.Frame.Size = UDim2.new(1, -40, 0, 38)
     PassInput.Frame.ZIndex = 102
     for _, c in ipairs(PassInput.Frame:GetChildren()) do
-        c.ZIndex = 102
+        if c:IsA("GuiObject") then c.ZIndex = 102 end
     end
 
     local PassStatus = create("TextLabel", {
