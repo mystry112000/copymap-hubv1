@@ -556,30 +556,25 @@ local function createPasswordInput(parent, placeholder, callback)
     addCorner(frame, 6)
     addStroke(frame, Theme.Border, 0.5)
 
-    local displayLabel = create("TextLabel", {
-        Size = UDim2.new(1, -16, 1, 0), Position = UDim2.new(0, 8, 0, 0),
-        BackgroundTransparency = 1, Text = placeholder,
-        TextColor3 = Theme.TextMuted, Font = Enum.Font.Gotham,
-        TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left,
+    local hiddenInput = create("TextBox", {
+        Size = UDim2.new(1, 0, 1, 0), Position = UDim2.new(0, 0, 0, 0),
+        BackgroundColor3 = Theme.Card, BackgroundTransparency = 0.01,
+        Text = "", PlaceholderText = placeholder,
+        PlaceholderColor3 = Theme.TextMuted, TextColor3 = Theme.Text,
+        Font = Enum.Font.Gotham, TextSize = 14,
+        ClearTextOnFocus = false, TextXAlignment = Enum.TextXAlignment.Left,
         Parent = frame,
     })
-
-    local hiddenInput = create("TextBox", {
-        Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1,
-        Text = "", TextColor3 = Theme.Text, Font = Enum.Font.Gotham,
-        TextSize = 14, ClearTextOnFocus = false, Parent = frame,
-    })
+    addCorner(hiddenInput, 6)
 
     hiddenInput.Focused:Connect(function()
-        if realText == "" then
-            displayLabel.Text = ""
-        end
+        hiddenInput.Text = ""
     end)
 
     hiddenInput.FocusLost:Connect(function()
         if realText == "" then
-            displayLabel.Text = placeholder
-            displayLabel.TextColor3 = Theme.TextMuted
+            hiddenInput.Text = placeholder
+            hiddenInput.TextColor3 = Theme.TextMuted
         end
         if callback then callback(realText) end
     end)
@@ -587,6 +582,7 @@ local function createPasswordInput(parent, placeholder, callback)
     hiddenInput:GetPropertyChangedSignal("Text"):Connect(function()
         if clearing then return end
         local inputText = hiddenInput.Text
+        if inputText == placeholder then return end
         if #inputText > #realText then
             local newChar = inputText:sub(#realText + 1)
             realText = realText .. newChar
@@ -594,16 +590,14 @@ local function createPasswordInput(parent, placeholder, callback)
             realText = realText:sub(1, #inputText)
         end
         clearing = true
-        hiddenInput.Text = ""
-        clearing = false
         if realText ~= "" then
             masked = string.rep("*", #realText)
-            displayLabel.Text = masked
-            displayLabel.TextColor3 = Theme.Text
+            hiddenInput.Text = masked
         else
-            displayLabel.Text = placeholder
-            displayLabel.TextColor3 = Theme.TextMuted
+            hiddenInput.Text = ""
         end
+        hiddenInput.TextColor3 = Theme.Text
+        clearing = false
     end)
 
     return {
@@ -615,8 +609,7 @@ local function createPasswordInput(parent, placeholder, callback)
             clearing = true
             hiddenInput.Text = ""
             clearing = false
-            displayLabel.Text = placeholder
-            displayLabel.TextColor3 = Theme.TextMuted
+            hiddenInput.TextColor3 = Theme.TextMuted
         end,
     }
 end
@@ -681,8 +674,9 @@ createButton(SavePage, "SAVE GAME", Theme.Accent, function()
     local SavePassInput = createPasswordInput(SavePassBox, _s[5])
     SavePassInput.Frame.Position = UDim2.new(0, 20, 0, 48)
     SavePassInput.Frame.Size = UDim2.new(1, -40, 0, 38)
+    SavePassInput.Frame.ZIndex = 102
     for _, c in ipairs(SavePassInput.Frame:GetChildren()) do
-        if c:IsA("GuiObject") or c:IsA("TextLabel") then c.ZIndex = 102 end
+        c.ZIndex = 102
     end
 
     local SavePassStatus = create("TextLabel", {
@@ -794,8 +788,9 @@ createButton(NicePage, _s[14], Theme.Gold, function()
     local PassInput = createPasswordInput(PassBox, _s[5])
     PassInput.Frame.Position = UDim2.new(0, 20, 0, 48)
     PassInput.Frame.Size = UDim2.new(1, -40, 0, 38)
+    PassInput.Frame.ZIndex = 102
     for _, c in ipairs(PassInput.Frame:GetChildren()) do
-        if c:IsA("GuiObject") or c:IsA("TextLabel") then c.ZIndex = 102 end
+        c.ZIndex = 102
     end
 
     local PassStatus = create("TextLabel", {
