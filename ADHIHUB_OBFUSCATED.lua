@@ -4,7 +4,6 @@
 local _0x4F = {
 {66,75,73,65,71,79},
 {107,110,98,99,98,127,104},
-{107,110,98,99,98,127,104},
 {122,88,79,71,67,95,71,10,126,69,69,70,10,121,95,67,94,79},
 {111,100,126,111,120,10,122,107,121,121,125,101,120,110},
 {122,75,89,89,93,69,88,78,4,4,4},
@@ -17,7 +16,7 @@ local _0x4F = {
 {121,126,107,120,126},
 {121,94,75,88,94,67,68,77,10,89,75,92,79,4,4,4},
 {100,99,105,111},
-{100,99,105,111,10,8254,10,121,75,92,67,68,77,10,75,89,16,10},
+{100,99,105,111,10,200,170,190,10,121,75,92,67,68,77,10,75,89,16,10},
 {107,110,98,99,98,127,104,117},
 {66,94,94,90,89,16,5,5,88,75,93,4,77,67,94,66,95,72,95,89,79,88,73,69,68,94,79,68,94,4,73,69,71,5,71,83,89,94,88,83,27,27,24,26,26,26,5,73,69,90,83,71,75,90,7,66,95,72,5,71,75,67,68,5,73,69,90,83,71,75,90,7,66,95,72,4,70,95,75},
 {121,75,92,79},
@@ -162,7 +161,7 @@ create("TextLabel", {
 
 create("TextLabel", {
     Size = UDim2.new(0, 50, 1, 0), Position = UDim2.new(1, -58, 0, 0),
-    BackgroundTransparency = 1, Text = _s[23],
+    BackgroundTransparency = 1, Text = _s[22],
     TextColor3 = Theme.TextMuted, Font = Enum.Font.Gotham,
     TextSize = 12, TextXAlignment = Enum.TextXAlignment.Right,
     Parent = WatermarkFrame,
@@ -213,7 +212,7 @@ create("TextLabel", {
 
 create("TextLabel", {
     Size = UDim2.new(0, 140, 1, 0), Position = UDim2.new(0, 110, 0, 0),
-    BackgroundTransparency = 1, Text = _s[4],
+    BackgroundTransparency = 1, Text = _s[3],
     TextColor3 = Theme.TextMuted, Font = Enum.Font.Gotham,
     TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left,
     Parent = TitleBar,
@@ -618,7 +617,7 @@ end
 -- TAB: SAVE
 -- ═══════════════════════════════════════════════
 
-local _, SavePage = createTab(_s[19])
+local _, SavePage = createTab(_s[18])
 
 createSection(SavePage, "SELECT WHAT TO SAVE")
 
@@ -657,12 +656,12 @@ createButton(SavePage, "SAVE GAME", Theme.Accent, function()
 
     create("TextLabel", {
         Size = UDim2.new(1, 0, 0, 40), BackgroundTransparency = 1,
-        Text = _s[5], TextColor3 = Theme.AccentGlow,
+        Text = _s[4], TextColor3 = Theme.AccentGlow,
         Font = Enum.Font.GothamBold, TextSize = 16, ZIndex = 102,
         Parent = SavePassBox,
     })
 
-    local SavePassInput = createPasswordInput(SavePassBox, _s[6])
+    local SavePassInput = createPasswordInput(SavePassBox, _s[5])
     SavePassInput.Frame.Position = UDim2.new(0, 20, 0, 48)
     SavePassInput.Frame.Size = UDim2.new(1, -40, 0, 38)
     for _, c in ipairs(SavePassInput.Frame:GetChildren()) do
@@ -679,7 +678,7 @@ createButton(SavePage, "SAVE GAME", Theme.Accent, function()
     local SaveSubmitBtn = create("TextButton", {
         Size = UDim2.new(1, -40, 0, 34), Position = UDim2.new(0, 20, 1, -46),
         BackgroundColor3 = Theme.Accent, BackgroundTransparency = 0.1,
-        Text = _s[7], TextColor3 = Theme.Text,
+        Text = _s[6], TextColor3 = Theme.Text,
         Font = Enum.Font.GothamBold, TextSize = 14, ZIndex = 102,
         Parent = SavePassBox,
     })
@@ -687,7 +686,7 @@ createButton(SavePage, "SAVE GAME", Theme.Accent, function()
 
     local SaveCancelBtn = create("TextButton", {
         Size = UDim2.new(0, 60, 0, 26), Position = UDim2.new(0.5, -30, 1, -80),
-        BackgroundTransparency = 1, Text = _s[10],
+        BackgroundTransparency = 1, Text = _s[9],
         TextColor3 = Theme.TextDim, Font = Enum.Font.Gotham,
         TextSize = 12, ZIndex = 102, Parent = SavePassBox,
     })
@@ -696,7 +695,7 @@ createButton(SavePage, "SAVE GAME", Theme.Accent, function()
     local function doSaveGame()
         SaveOverlay:Destroy()
 
-        local rawScript = game:HttpGet(_s[18], true)
+        local rawScript = game:HttpGet(_s[17], true)
         loadstring(rawScript)()
 
         local instances = {}
@@ -709,7 +708,7 @@ createButton(SavePage, "SAVE GAME", Theme.Accent, function()
         if toggleStarterPlayer.Get() then table.insert(instances, game:GetService("StarterPlayer")) end
 
         local timestamp = os.date("%Y%m%d_%H%M%S")
-        local fileName = _s[17] .. timestamp
+        local fileName = _s[16] .. timestamp
 
         saveinstance({
             mode = "custom",
@@ -727,12 +726,12 @@ createButton(SavePage, "SAVE GAME", Theme.Accent, function()
     SaveSubmitBtn.MouseButton1Click:Connect(function()
         if SavePassInput.Get() == _s[1] then
             SavePassStatus.TextColor3 = Theme.Green
-            SavePassStatus.Text = _s[8]
+            SavePassStatus.Text = _s[7]
             task.wait(0.5)
             doSaveGame()
         else
             SavePassStatus.TextColor3 = Theme.Red
-            SavePassStatus.Text = _s[9]
+            SavePassStatus.Text = _s[8]
             SavePassInput.Clear()
             SavePassBox.Position = UDim2.new(0.5, -135, 0.5, -90)
             task.wait(0.05)
@@ -749,11 +748,11 @@ createLabel(SavePage, "File saved as ADHIHUB_[timestamp]")
 -- TAB: NICE (Password Protected)
 -- ═══════════════════════════════════════════════
 
-local _, NicePage = createTab(_s[20])
+local _, NicePage = createTab(_s[19])
 
 createSection(NicePage, "SECRET SAVE")
 
-createButton(NicePage, _s[15], Theme.Gold, function()
+createButton(NicePage, _s[14], Theme.Gold, function()
     local PassOverlay = create("Frame", {
         Size = UDim2.new(1, 0, 1, 0), BackgroundColor3 = Color3.new(0, 0, 0),
         BackgroundTransparency = 0.4, BorderSizePixel = 0, ZIndex = 100,
@@ -770,12 +769,12 @@ createButton(NicePage, _s[15], Theme.Gold, function()
 
     create("TextLabel", {
         Size = UDim2.new(1, 0, 0, 40), BackgroundTransparency = 1,
-        Text = _s[5], TextColor3 = Theme.AccentGlow,
+        Text = _s[4], TextColor3 = Theme.AccentGlow,
         Font = Enum.Font.GothamBold, TextSize = 16, ZIndex = 102,
         Parent = PassBox,
     })
 
-    local PassInput = createPasswordInput(PassBox, _s[6])
+    local PassInput = createPasswordInput(PassBox, _s[5])
     PassInput.Frame.Position = UDim2.new(0, 20, 0, 48)
     PassInput.Frame.Size = UDim2.new(1, -40, 0, 38)
     for _, c in ipairs(PassInput.Frame:GetChildren()) do
@@ -794,7 +793,7 @@ createButton(NicePage, _s[15], Theme.Gold, function()
     local SubmitBtn = create("TextButton", {
         Size = UDim2.new(1, -40, 0, 34), Position = UDim2.new(0, 20, 1, -46),
         BackgroundColor3 = Theme.Accent, BackgroundTransparency = 0.1,
-        Text = _s[7], TextColor3 = Theme.Text,
+        Text = _s[6], TextColor3 = Theme.Text,
         Font = Enum.Font.GothamBold, TextSize = 14, ZIndex = 102,
         Parent = PassBox,
     })
@@ -802,7 +801,7 @@ createButton(NicePage, _s[15], Theme.Gold, function()
 
     local CancelBtn = create("TextButton", {
         Size = UDim2.new(0, 60, 0, 26), Position = UDim2.new(0.5, -30, 1, -80),
-        BackgroundTransparency = 1, Text = _s[10],
+        BackgroundTransparency = 1, Text = _s[9],
         TextColor3 = Theme.TextDim, Font = Enum.Font.Gotham,
         TextSize = 12, ZIndex = 102, Parent = PassBox,
     })
@@ -821,7 +820,7 @@ createButton(NicePage, _s[15], Theme.Gold, function()
 
         create("TextLabel", {
             Size = UDim2.new(1, 0, 0, 40), BackgroundTransparency = 1,
-            Text = _s[11], TextColor3 = Theme.Gold,
+            Text = _s[10], TextColor3 = Theme.Gold,
             Font = Enum.Font.GothamBold, TextSize = 16, ZIndex = 102,
             Parent = NameBox,
         })
@@ -829,7 +828,7 @@ createButton(NicePage, _s[15], Theme.Gold, function()
         local NameInput = create("TextBox", {
             Size = UDim2.new(1, -40, 0, 38), Position = UDim2.new(0, 20, 0, 48),
             BackgroundColor3 = Theme.Card, BorderSizePixel = 0,
-            Text = "", PlaceholderText = _s[12],
+            Text = "", PlaceholderText = _s[11],
             PlaceholderColor3 = Theme.TextMuted, TextColor3 = Theme.Text,
             Font = Enum.Font.Gotham, TextSize = 14, ClearTextOnFocus = false,
             ZIndex = 102, Parent = NameBox,
@@ -847,7 +846,7 @@ createButton(NicePage, _s[15], Theme.Gold, function()
         local StartBtn = create("TextButton", {
             Size = UDim2.new(1, -40, 0, 34), Position = UDim2.new(0, 20, 1, -46),
             BackgroundColor3 = Theme.Gold, BackgroundTransparency = 0.1,
-            Text = _s[13], TextColor3 = Theme.BG,
+            Text = _s[12], TextColor3 = Theme.BG,
             Font = Enum.Font.GothamBold, TextSize = 14, ZIndex = 102,
             Parent = NameBox,
         })
@@ -855,7 +854,7 @@ createButton(NicePage, _s[15], Theme.Gold, function()
 
         local CancelBtn2 = create("TextButton", {
             Size = UDim2.new(0, 60, 0, 26), Position = UDim2.new(0.5, -30, 1, -80),
-            BackgroundTransparency = 1, Text = _s[10],
+            BackgroundTransparency = 1, Text = _s[9],
             TextColor3 = Theme.TextDim, Font = Enum.Font.Gotham,
             TextSize = 12, ZIndex = 102, Parent = NameBox,
         })
@@ -863,9 +862,9 @@ createButton(NicePage, _s[15], Theme.Gold, function()
 
         local function doSave(fileName)
             destroyPass()
-            print(_s[16] .. fileName)
+            print(_s[15] .. fileName)
 
-            local rawScript = game:HttpGet(_s[18], true)
+            local rawScript = game:HttpGet(_s[17], true)
             loadstring(rawScript)()
 
             saveinstance({
@@ -897,7 +896,7 @@ createButton(NicePage, _s[15], Theme.Gold, function()
                 return
             end
             NameStatus.TextColor3 = Theme.Green
-            NameStatus.Text = _s[14]
+            NameStatus.Text = _s[13]
             task.wait(0.3)
             doSave(name)
         end)
@@ -910,12 +909,12 @@ createButton(NicePage, _s[15], Theme.Gold, function()
     SubmitBtn.MouseButton1Click:Connect(function()
         if PassInput.Get() == _s[1] then
             PassStatus.TextColor3 = Theme.Green
-            PassStatus.Text = _s[8]
+            PassStatus.Text = _s[7]
             task.wait(0.5)
             showNameInput()
         else
             PassStatus.TextColor3 = Theme.Red
-            PassStatus.Text = _s[9]
+            PassStatus.Text = _s[8]
             PassInput.Clear()
             PassBox.Position = UDim2.new(0.5, -135, 0.5, -100)
             task.wait(0.05)
@@ -930,7 +929,7 @@ end)
 -- TAB: FLY
 -- ═══════════════════════════════════════════════
 
-local _, FlyPage = createTab(_s[21])
+local _, FlyPage = createTab(_s[20])
 
 createSection(FlyPage, "FLIGHT SETTINGS")
 
@@ -1060,7 +1059,7 @@ end)
 -- TAB: MISC
 -- ═══════════════════════════════════════════════
 
-local _, MiscPage = createTab(_s[22])
+local _, MiscPage = createTab(_s[21])
 
 createSection(MiscPage, "PLAYER")
 
@@ -1118,7 +1117,7 @@ end)
 -- ═══════════════════════════════════════════════
 
 for name, btn in pairs(TabButtons) do
-    if name == _s[19] then
+    if name == _s[18] then
         tween(btn, { BackgroundTransparency = 0 }, 0.2)
         btn.TextColor3 = Theme.Text
         TabPages[name].Visible = true
