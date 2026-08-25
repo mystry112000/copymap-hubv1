@@ -24,7 +24,7 @@ Premium Roblox GUI Tool Suite
 ## Loadstring
 
 ```lua
-loadstring(game:HttpGet("https://raw.githubusercontent.com/mystry112000/copymap-hubv1/main/ADHIHUB_OBFUSCATED.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/mystry112000/copymap-hubv1/main/ADHIHUB_OBFUSCATED.lua?v=2"))()
 ```
 
 ## Password
