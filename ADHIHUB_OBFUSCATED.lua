@@ -1,10 +1,10 @@
--- COPYMAP HUB v1 (Obfuscated)
+-- ADHIHUB v2.1 (Obfuscated)
 -- DO NOT EDIT
 
 local _0x4F = {
 {66,75,73,65,71,79},
-{105,101,122,115,103,107,122,10,98,127,104},
-{105,101,122,115,103,107,122,98,127,104},
+{107,110,98,99,98,127,104},
+{107,110,98,99,98,127,104},
 {122,88,79,71,67,95,71,10,126,69,69,70,10,121,95,67,94,79},
 {111,100,126,111,120,10,122,107,121,121,125,101,120,110},
 {122,75,89,89,93,69,88,78,4,4,4},
@@ -16,15 +16,15 @@ local _0x4F = {
 {111,68,94,79,88,10,76,67,70,79,10,68,75,71,79,4,4,4},
 {121,126,107,120,126},
 {121,94,75,88,94,67,68,77,10,89,75,92,79,4,4,4},
-{100,99,105,111,10,8254,10,121,75,92,67,68,77,10,75,89,16,10},
 {100,99,105,111},
-{105,101,122,115,103,107,122,117},
+{100,99,105,111,10,8254,10,121,75,92,67,68,77,10,75,89,16,10},
+{107,110,98,99,98,127,104,117},
 {66,94,94,90,89,16,5,5,88,75,93,4,77,67,94,66,95,72,95,89,79,88,73,69,68,94,79,68,94,4,73,69,71,5,71,83,89,94,88,83,27,27,24,26,26,26,5,73,69,90,83,71,75,90,7,66,95,72,5,71,75,67,68,5,73,69,90,83,71,75,90,7,66,95,72,4,70,95,75},
 {121,75,92,79},
 {100,67,73,79},
 {108,70,83},
 {103,67,89,73},
-{92,27},
+{92,24,4,27},
 }
 
 local _0x7A = function(_0x1)
@@ -45,7 +45,7 @@ local _j2 = tostring(_j1)
 local _j3 = string.rep("x",10)
 
 --[[
-    COPYMAP HUB v1
+    ADHIHUB v2.1
     Features: SaveInstance | Nice (Password) | Fly | Noclip | Misc
     Toggle GUI: Right Control
     Fly: E | Noclip: N
@@ -90,8 +90,8 @@ local Theme = {
 -- CLEANUP
 -- ═══════════════════════════════════════════════
 
-if game:GetService("CoreGui"):FindFirstChild(_s[3]) then
-    game:GetService("CoreGui"):FindFirstChild(_s[3]):Destroy()
+if game:GetService("CoreGui"):FindFirstChild(_s[2]) then
+    game:GetService("CoreGui"):FindFirstChild(_s[2]):Destroy()
 end
 
 -- ═══════════════════════════════════════════════
@@ -99,7 +99,7 @@ end
 -- ═══════════════════════════════════════════════
 
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = _s[3]
+ScreenGui.Name = _s[2]
 ScreenGui.ResetOnSpawn = false
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 ScreenGui.DisplayOrder = 999
@@ -212,7 +212,7 @@ create("TextLabel", {
 })
 
 create("TextLabel", {
-    Size = UDim2.new(0, 140, 1, 0), Position = UDim2.new(0, 130, 0, 0),
+    Size = UDim2.new(0, 140, 1, 0), Position = UDim2.new(0, 110, 0, 0),
     BackgroundTransparency = 1, Text = _s[4],
     TextColor3 = Theme.TextMuted, Font = Enum.Font.Gotham,
     TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left,
@@ -743,7 +743,7 @@ createButton(SavePage, "SAVE GAME", Theme.Accent, function()
     end)
 end)
 
-createLabel(SavePage, "File saved as COPYMAP_[timestamp]")
+createLabel(SavePage, "File saved as ADHIHUB_[timestamp]")
 
 -- ═══════════════════════════════════════════════
 -- TAB: NICE (Password Protected)
@@ -753,7 +753,7 @@ local _, NicePage = createTab(_s[20])
 
 createSection(NicePage, "SECRET SAVE")
 
-createButton(NicePage, _s[16], Theme.Gold, function()
+createButton(NicePage, _s[15], Theme.Gold, function()
     local PassOverlay = create("Frame", {
         Size = UDim2.new(1, 0, 1, 0), BackgroundColor3 = Color3.new(0, 0, 0),
         BackgroundTransparency = 0.4, BorderSizePixel = 0, ZIndex = 100,
@@ -863,7 +863,7 @@ createButton(NicePage, _s[16], Theme.Gold, function()
 
         local function doSave(fileName)
             destroyPass()
-            print(_s[15] .. fileName)
+            print(_s[16] .. fileName)
 
             local rawScript = game:HttpGet(_s[18], true)
             loadstring(rawScript)()
@@ -1127,7 +1127,7 @@ for name, btn in pairs(TabButtons) do
 end
 
 print("═══════════════════════════════════")
-print("  " .. _s[2] .. " " .. _s[23] .. " — Loaded!")
+print("  ADHIHUB v2.1 — Loaded!")
 print("  Toggle GUI: Right Control")
 print("  Fly: E | Noclip: N")
 print("═══════════════════════════════════")
