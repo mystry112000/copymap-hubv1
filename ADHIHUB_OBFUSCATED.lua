@@ -607,6 +607,7 @@ local function createPasswordInput(parent, placeholder, callback)
     end)
 
     return {
+        Frame = frame,
         Get = function() return realText end,
         Clear = function()
             realText = ""
