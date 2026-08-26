@@ -40,6 +40,9 @@ local _0x4F = {
 {107,68,94,67,7,107,108,97},
 {107,95,94,69,10,105,69,70,70,79,73,94},
 {104,120,99,100,109,10,107,102,102,10,126,101,101,102,121},
+{104,126,101,101,102,121,10,2,102,69,73,75,70,3},
+{120,79,75,73,66,10,2,24,26,10,89,94,95,78,89,3},
+{126,111,102,111,122,101,120,126,10,126,101,10,122,102,107,115,111,120},
 {120,111,96,101,99,100},
 {121,111,120,124,111,120,10,98,101,122},
 {110,111,121,126,120,101,115,10,109,127,99},
@@ -945,7 +948,7 @@ createButton(NicePage, _s[14], Theme.Gold, function()
             local name = NameInput.Text
             if name == "" or name == nil then
                 NameStatus.TextColor3 = Theme.Red
-                NameStatus.Text = _s[51]
+                NameStatus.Text = _s[54]
                 return
             end
             NameStatus.TextColor3 = Theme.Green
@@ -999,8 +1002,8 @@ createSection(FlyPage, "CONTROLS")
 
 createLabel(FlyPage, "E — Toggle Fly")
 createLabel(FlyPage, "N — Toggle Noclip")
-createLabel(FlyPage, _s[44])
-createLabel(FlyPage, _s[45])
+createLabel(FlyPage, _s[47])
+createLabel(FlyPage, _s[48])
 createLabel(FlyPage, "WASD — Move")
 createLabel(FlyPage, "Space — Up | Q — Down")
 
@@ -1170,7 +1173,7 @@ local jumpSlider = createSlider(MiscPage, "Jump Power", 50, 300, 50, function(va
     end
 end)
 
-createButton(MiscPage, _s[42], Theme.Orange, function()
+createButton(MiscPage, _s[45], Theme.Orange, function()
     speedSlider.Set(16)
     jumpSlider.Set(50)
 end)
@@ -1185,7 +1188,7 @@ local fovSlider = createSlider(MiscPage, _s[31], 30, 120, 70, function(val)
     camera.FieldOfView = val
 end)
 
-createButton(MiscPage, _s[43], Theme.Orange, function()
+createButton(MiscPage, _s[46], Theme.Orange, function()
     gravitySlider.Set(196)
     fovSlider.Set(70)
 end)
@@ -1195,6 +1198,7 @@ createSection(MiscPage, "EXTRAS")
 local godModeToggle = createToggle(MiscPage, _s[32], false)
 local invisibleToggle = createToggle(MiscPage, _s[33], false)
 local flingToggle = createToggle(MiscPage, _s[34], false)
+local reachToggle = createToggle(MiscPage, _s[40], false)
 local spinBotToggle = createToggle(MiscPage, _s[35], false)
 local antiAFKToggle = createToggle(MiscPage, _s[36], false)
 local autoCollectToggle = createToggle(MiscPage, _s[37], false)
@@ -1209,15 +1213,59 @@ createButton(MiscPage, _s[38], Theme.Accent, function()
     end
 end)
 
+createButton(MiscPage, _s[39], Theme.Accent, function()
+    local backpack = player:FindFirstChildOfClass("Backpack")
+    if backpack then
+        local hammer = Instance.new("Tool")
+        hammer.Name = "Hammer"
+        hammer.RequiresHandle = false
+        hammer.Parent = backpack
+        local clone = Instance.new("Tool")
+        clone.Name = "Clone"
+        clone.RequiresHandle = false
+        clone.Parent = backpack
+        local deleteTool = Instance.new("Tool")
+        deleteTool.Name = "Delete"
+        deleteTool.RequiresHandle = false
+        deleteTool.Parent = backpack
+    end
+end)
+
 createSection(MiscPage, "SERVER")
 
-createButton(MiscPage, _s[39], Theme.Orange, function()
+local tpPlayerInput = create("TextBox", {
+    Size = UDim2.new(1, 0, 0, 34),
+    BackgroundColor3 = Theme.Card, BorderSizePixel = 0,
+    Text = "", PlaceholderText = "Player name to TP...",
+    PlaceholderColor3 = Theme.TextMuted, TextColor3 = Theme.Text,
+    Font = Enum.Font.Gotham, TextSize = 13, ClearTextOnFocus = false,
+    Parent = MiscPage,
+})
+addCorner(tpPlayerInput, 6)
+addStroke(tpPlayerInput, Theme.Border, 0.5)
+
+createButton(MiscPage, _s[41], Theme.Accent, function()
+    local name = tpPlayerInput.Text
+    if name == "" then return end
+    for _, p in ipairs(Players:GetPlayers()) do
+        if p.Name:lower():find(name:lower()) or p.DisplayName:lower():find(name:lower()) then
+            local targetChar = p.Character
+            local myChar = player.Character
+            if targetChar and targetChar:FindFirstChild("HumanoidRootPart") and myChar and myChar:FindFirstChild("HumanoidRootPart") then
+                myChar.HumanoidRootPart.CFrame = targetChar.HumanoidRootPart.CFrame * CFrame.new(0, 0, 5)
+            end
+            break
+        end
+    end
+end)
+
+createButton(MiscPage, _s[42], Theme.Orange, function()
     game:GetService("TeleportService"):Teleport(game.PlaceId, player)
 end)
 
-createButton(MiscPage, _s[40], Theme.Accent, function()
+createButton(MiscPage, _s[43], Theme.Accent, function()
     local servers = game:GetService("HttpService"):JSONDecode(
-        game:HttpGet(_s[47] .. game.PlaceId .. _s[48])
+        game:HttpGet(_s[50] .. game.PlaceId .. _s[51])
     )
     if servers and servers.data then
         for _, s in ipairs(servers.data) do
@@ -1231,7 +1279,7 @@ end)
 
 createSection(MiscPage, "DISPLAY")
 
-createButton(MiscPage, _s[41], Theme.Red, function()
+createButton(MiscPage, _s[44], Theme.Red, function()
     ScreenGui:Destroy()
 end)
 
@@ -1357,6 +1405,43 @@ espToggle:SetCallback(function(enabled)
     end
 end)
 
+-- Reach
+local function setReach(enabled)
+    local char = player.Character
+    if not char then return end
+    for _, tool in ipairs(char:GetChildren()) do
+        if tool:IsA("Tool") then
+            local handle = tool:FindFirstChild("Handle")
+            if handle then
+                if enabled then
+                    local mesh = handle:FindFirstChildOfClass("SpecialMesh")
+                    if mesh then
+                        mesh:Destroy()
+                    end
+                    local att = Instance.new("Attachment")
+                    att.Name = "ReachAttachment"
+                    att.Parent = handle
+                    handle.Size = Vector3.new(2, 2, 40)
+                else
+                    local att = handle:FindFirstChild("ReachAttachment")
+                    if att then att:Destroy() end
+                    handle.Size = Vector3.new(2, 2, 1)
+                end
+            end
+        end
+    end
+end
+
+reachToggle:SetCallback(function(enabled)
+    setReach(enabled)
+end)
+
+player.Backpack.ChildAdded:Connect(function(tool)
+    if reachToggle.Get() and tool:IsA("Tool") then
+        tool.Handle.Size = Vector3.new(2, 2, 40)
+    end
+end)
+
 -- God Mode
 local origMaxHealth = nil
 local origHealth = nil
@@ -1410,37 +1495,41 @@ invisibleToggle:SetCallback(function(enabled)
     end
 end)
 
--- Fling
+-- Fling (Passive - anyone touching you gets flung)
 local flingConn = nil
+local flingTouchedConns = {}
+
 local function startFling()
     local char = player.Character
-    if not char or not char:FindFirstChild("HumanoidRootPart") then return end
-    local hrp = char.HumanoidRootPart
-    local bodyAngular = Instance.new("BodyAngularVelocity")
-    bodyAngular.AngularVelocity = Vector3.new(0, 9999, 0)
-    bodyAngular.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-    bodyAngular.P = 10000000
-    bodyAngular.Parent = hrp
-    flingConn = RunService.Stepped:Connect(function()
-        local ch = player.Character
-        if not ch or not ch:FindFirstChild("HumanoidRootPart") then
-            if bodyAngular then bodyAngular:Destroy() end
-            if flingConn then flingConn:Disconnect() flingConn = nil end
-            return
+    if not char then return end
+    for _, part in ipairs(char:GetDescendants()) do
+        if part:IsA("BasePart") then
+            local c = part.Touched:Connect(function(hit)
+                if not flingToggle.Get() then return end
+                if not hit or not hit.Parent then return end
+                local hitChar = hit.Parent
+                if hitChar == char then return end
+                local hitHumanoid = hitChar:FindFirstChildOfClass("Humanoid")
+                if not hitHumanoid or hitHumanoid.Health <= 0 then return end
+                local hitRoot = hitChar:FindFirstChild("HumanoidRootPart")
+                if not hitRoot then return end
+                local myRoot = char:FindFirstChild("HumanoidRootPart")
+                if not myRoot then return end
+                local direction = (hitRoot.Position - myRoot.Position).Unit
+                hitRoot.Velocity = direction * 200 + Vector3.new(0, 100, 0)
+                hitRoot.RotVelocity = Vector3.new(math.random(-50, 50), math.random(-50, 50), math.random(-50, 50))
+            end)
+            table.insert(flingTouchedConns, c)
         end
-        ch.HumanoidRootPart.AssemblyAngularVelocity = Vector3.new(0, 9999, 0)
-    end)
+    end
 end
 
 local function stopFling()
     if flingConn then flingConn:Disconnect() flingConn = nil end
-    local char = player.Character
-    if char and char:FindFirstChild("HumanoidRootPart") then
-        for _, v in ipairs(char.HumanoidRootPart:GetChildren()) do
-            if v:IsA("BodyAngularVelocity") then v:Destroy() end
-        end
-        char.HumanoidRootPart.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+    for _, c in ipairs(flingTouchedConns) do
+        if c.Connected then c:Disconnect() end
     end
+    flingTouchedConns = {}
 end
 
 flingToggle:SetCallback(function(enabled)
