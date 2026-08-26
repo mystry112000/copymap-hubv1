@@ -216,6 +216,7 @@ local MainFrame = create("Frame", {
     Position = UDim2.new(0.5, -230, 0.5, -260),
     BackgroundColor3 = Theme.BG, BackgroundTransparency = 0.02,
     BorderSizePixel = 0, Active = true, Draggable = true,
+    ClipsDescendants = true,
     Parent = ScreenGui,
 })
 addCorner(MainFrame, 12)
@@ -368,6 +369,7 @@ local function createTab(name)
         Name = name .. "Page", Size = UDim2.new(1, -16, 1, -110),
         Position = UDim2.new(0, 8, 0, 96),
         BackgroundTransparency = 1, BorderSizePixel = 0,
+        ClipsDescendants = true,
         ScrollBarThickness = 3, ScrollBarImageColor3 = Theme.Accent,
         CanvasSize = UDim2.new(0, 0, 0, 0),
         AutomaticCanvasSize = Enum.AutomaticSize.Y,
