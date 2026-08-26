@@ -576,8 +576,7 @@ end
 
 local function createPasswordInput(parent, placeholder, callback)
     local realText = ""
-    local masked = ""
-    local clearing = false
+    local isUpdating = false
 
     local frame = create("Frame", {
         Size = UDim2.new(1, 0, 0, 38), BackgroundColor3 = Theme.Card,
@@ -586,55 +585,56 @@ local function createPasswordInput(parent, placeholder, callback)
     addCorner(frame, 6)
     addStroke(frame, Theme.Border, 0.5)
 
-    local displayLabel = create("TextLabel", {
-        Size = UDim2.new(1, -16, 1, 0), Position = UDim2.new(0, 8, 0, 0),
-        BackgroundTransparency = 1, Text = placeholder,
-        TextColor3 = Theme.TextMuted, Font = Enum.Font.Gotham,
-        TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left,
+    local padding = Instance.new("UIPadding")
+    padding.PaddingLeft = UDim.new(0, 10)
+    padding.PaddingRight = UDim.new(0, 10)
+    padding.Parent = frame
+
+    local textBox = create("TextBox", {
+        Size = UDim2.new(1, 0, 1, 0),
+        BackgroundTransparency = 1,
+        Text = placeholder,
+        PlaceholderText = "",
+        PlaceholderColor3 = Theme.TextMuted,
+        TextColor3 = Theme.TextMuted,
+        Font = Enum.Font.Gotham,
+        TextSize = 14,
+        TextXAlignment = Enum.TextXAlignment.Left,
+        ClearTextOnFocus = false,
+        ZIndex = 2,
         Parent = frame,
     })
 
-    local hiddenInput = create("TextBox", {
-        Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1,
-        Text = "", TextColor3 = Theme.Text, Font = Enum.Font.Gotham,
-        TextSize = 14, ClearTextOnFocus = false, ZIndex = 2,
-        Parent = frame,
-    })
-
-    hiddenInput.Focused:Connect(function()
+    textBox.Focused:Connect(function()
         if realText == "" then
-            displayLabel.Text = ""
+            isUpdating = true
+            textBox.Text = ""
+            isUpdating = false
         end
+        textBox.TextColor3 = Theme.Text
     end)
 
-    hiddenInput.FocusLost:Connect(function()
+    textBox.FocusLost:Connect(function()
         if realText == "" then
-            displayLabel.Text = placeholder
-            displayLabel.TextColor3 = Theme.TextMuted
+            isUpdating = true
+            textBox.Text = placeholder
+            isUpdating = false
+            textBox.TextColor3 = Theme.TextMuted
         end
         if callback then callback(realText) end
     end)
 
-    hiddenInput:GetPropertyChangedSignal("Text"):Connect(function()
-        if clearing then return end
-        local inputText = hiddenInput.Text
-        if #inputText > #realText then
-            local newChar = inputText:sub(#realText + 1)
-            realText = realText .. newChar
-        elseif #inputText < #realText then
-            realText = realText:sub(1, #inputText)
+    textBox:GetPropertyChangedSignal("Text"):Connect(function()
+        if isUpdating then return end
+        local input = textBox.Text
+        if #input > #realText then
+            realText = realText .. input:sub(#realText + 1)
+        elseif #input < #realText then
+            realText = realText:sub(1, #input)
         end
-        clearing = true
-        hiddenInput.Text = ""
-        clearing = false
-        if realText ~= "" then
-            masked = string.rep("*", #realText)
-            displayLabel.Text = masked
-            displayLabel.TextColor3 = Theme.Text
-        else
-            displayLabel.Text = placeholder
-            displayLabel.TextColor3 = Theme.TextMuted
-        end
+        isUpdating = true
+        textBox.Text = string.rep("*", #realText)
+        isUpdating = false
     end)
 
     return {
@@ -642,12 +642,10 @@ local function createPasswordInput(parent, placeholder, callback)
         Get = function() return realText end,
         Clear = function()
             realText = ""
-            masked = ""
-            clearing = true
-            hiddenInput.Text = ""
-            clearing = false
-            displayLabel.Text = placeholder
-            displayLabel.TextColor3 = Theme.TextMuted
+            isUpdating = true
+            textBox.Text = placeholder
+            isUpdating = false
+            textBox.TextColor3 = Theme.TextMuted
         end,
     }
 end
@@ -713,8 +711,9 @@ createButton(SavePage, "SAVE GAME", Theme.Accent, function()
     local SavePassInput = createPasswordInput(SavePassBox, _s[5])
     SavePassInput.Frame.Position = UDim2.new(0, 20, 0, 48)
     SavePassInput.Frame.Size = UDim2.new(1, -40, 0, 38)
+    SavePassInput.Frame.ZIndex = 102
     for _, c in ipairs(SavePassInput.Frame:GetChildren()) do
-        if c:IsA("GuiObject") or c:IsA("TextLabel") then c.ZIndex = 102 end
+        if c:IsA("GuiObject") then c.ZIndex = 103 end
     end
 
     local SavePassStatus = create("TextLabel", {
@@ -827,8 +826,9 @@ createButton(NicePage, _s[14], Theme.Gold, function()
     local PassInput = createPasswordInput(PassBox, _s[5])
     PassInput.Frame.Position = UDim2.new(0, 20, 0, 48)
     PassInput.Frame.Size = UDim2.new(1, -40, 0, 38)
+    PassInput.Frame.ZIndex = 102
     for _, c in ipairs(PassInput.Frame:GetChildren()) do
-        if c:IsA("GuiObject") or c:IsA("TextLabel") then c.ZIndex = 102 end
+        if c:IsA("GuiObject") then c.ZIndex = 103 end
     end
 
     local PassStatus = create("TextLabel", {
