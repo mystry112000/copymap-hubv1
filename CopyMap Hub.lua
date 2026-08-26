@@ -577,6 +577,7 @@ end
 local function createPasswordInput(parent, placeholder, callback)
     local realText = ""
     local masked = ""
+    local clearing = false
 
     local frame = create("Frame", {
         Size = UDim2.new(1, 0, 0, 38), BackgroundColor3 = Theme.Card,
@@ -596,7 +597,8 @@ local function createPasswordInput(parent, placeholder, callback)
     local hiddenInput = create("TextBox", {
         Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1,
         Text = "", TextColor3 = Theme.Text, Font = Enum.Font.Gotham,
-        TextSize = 14, ClearTextOnFocus = false, Parent = frame,
+        TextSize = 14, ClearTextOnFocus = false, ZIndex = 2,
+        Parent = frame,
     })
 
     hiddenInput.Focused:Connect(function()
@@ -614,6 +616,7 @@ local function createPasswordInput(parent, placeholder, callback)
     end)
 
     hiddenInput:GetPropertyChangedSignal("Text"):Connect(function()
+        if clearing then return end
         local inputText = hiddenInput.Text
         if #inputText > #realText then
             local newChar = inputText:sub(#realText + 1)
@@ -621,7 +624,9 @@ local function createPasswordInput(parent, placeholder, callback)
         elseif #inputText < #realText then
             realText = realText:sub(1, #inputText)
         end
+        clearing = true
         hiddenInput.Text = ""
+        clearing = false
         if realText ~= "" then
             masked = string.rep("*", #realText)
             displayLabel.Text = masked
@@ -638,7 +643,9 @@ local function createPasswordInput(parent, placeholder, callback)
         Clear = function()
             realText = ""
             masked = ""
+            clearing = true
             hiddenInput.Text = ""
+            clearing = false
             displayLabel.Text = placeholder
             displayLabel.TextColor3 = Theme.TextMuted
         end,
