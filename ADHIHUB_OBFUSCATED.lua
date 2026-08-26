@@ -24,6 +24,34 @@ local _0x4F = {
 {108,70,83},
 {103,67,89,73},
 {92,24,4,27},
+{124,67,89,95,75,70},
+{99,68,76,67,68,67,94,79,10,96,95,71,90,10,2,124,3},
+{105,70,67,73,65,10,126,122,10,2,103,69,95,89,79,3},
+{108,95,70,70,72,88,67,77,66,94},
+{120,79,71,69,92,79,10,108,69,77},
+{105,88,69,89,89,66,75,67,88},
+{111,121,122,10,2,122,70,75,83,79,88,10,100,75,71,79,89,3},
+{109,88,75,92,67,94,83},
+{108,101,124},
+{109,69,78,10,103,69,78,79},
+{121,90,67,68,10,104,69,94},
+{107,68,94,67,7,107,108,97},
+{107,95,94,69,10,105,69,70,70,79,73,94},
+{104,120,99,100,109,10,107,102,102,10,126,101,101,102,121},
+{120,111,96,101,99,100},
+{121,111,120,124,111,120,10,98,101,122},
+{110,111,121,126,120,101,115,10,109,127,99},
+{120,111,121,111,126,10,121,122,111,111,110},
+{120,111,121,111,126,10,125,101,120,102,110},
+{124,10,200,170,190,10,126,69,77,77,70,79,10,99,68,76,67,68,67,94,79,10,96,95,71,90},
+{105,70,67,73,65,10,200,170,190,10,126,79,70,79,90,69,88,94,10,2,67,76,10,105,70,67,73,65,10,126,122,10,69,68,3},
+{121,122,107,105,111,10,200,170,190,10,127,90,10,86,10,123,10,200,170,190,10,110,69,93,68},
+{66,94,94,90,89,16,5,5,77,75,71,79,89,4,88,69,72,70,69,82,4,73,69,71,5,92,27,5,77,75,71,79,89,5},
+{5,89,79,88,92,79,88,89,5,122,95,72,70,67,73,21,89,69,88,94,101,88,78,79,88,23,107,89,73,12,70,67,71,67,94,23,27,26,26},
+{107,110,98,99,98,127,104,16,10,108,75,67,70,79,78,10,94,69,10,70,69,75,78,10,89,75,92,79,67,68,89,94,75,68,73,79},
+{105,101,122,115,103,107,122,10,98,127,104,16,10,108,75,67,70,79,78,10,94,69,10,70,69,75,78,10,89,75,92,79,67,68,89,94,75,68,73,79},
+{111,68,94,79,88,10,75,10,76,67,70,79,10,68,75,71,79,11},
+{100,99,105,111,10,200,170,190,10,121,75,92,67,68,77,10,75,89,16,10},
 }
 
 local _xor = function(a, b)
@@ -547,7 +575,6 @@ end
 local function createPasswordInput(parent, placeholder, callback)
     local realText = ""
     local masked = ""
-    local clearing = false
 
     local frame = create("Frame", {
         Size = UDim2.new(1, 0, 0, 38), BackgroundColor3 = Theme.Card,
@@ -556,65 +583,61 @@ local function createPasswordInput(parent, placeholder, callback)
     addCorner(frame, 6)
     addStroke(frame, Theme.Border, 0.5)
 
-    local hiddenInput = create("TextBox", {
+    local displayLabel = create("TextLabel", {
         Size = UDim2.new(1, -16, 1, 0), Position = UDim2.new(0, 8, 0, 0),
-        BackgroundColor3 = Theme.Card, BackgroundTransparency = 0.01,
-        Text = "", PlaceholderText = placeholder,
-        PlaceholderColor3 = Theme.TextMuted, TextColor3 = Theme.Text,
-        Font = Enum.Font.Gotham, TextSize = 14,
-        ClearTextOnFocus = false, TextXAlignment = Enum.TextXAlignment.Left,
+        BackgroundTransparency = 1, Text = placeholder,
+        TextColor3 = Theme.TextMuted, Font = Enum.Font.Gotham,
+        TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left,
         Parent = frame,
     })
-    addCorner(hiddenInput, 6)
+
+    local hiddenInput = create("TextBox", {
+        Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1,
+        Text = "", TextColor3 = Theme.Text, Font = Enum.Font.Gotham,
+        TextSize = 14, ClearTextOnFocus = false, Parent = frame,
+    })
 
     hiddenInput.Focused:Connect(function()
-        clearing = true
-        hiddenInput.Text = ""
-        clearing = false
+        if realText == "" then
+            displayLabel.Text = ""
+        end
     end)
 
     hiddenInput.FocusLost:Connect(function()
         if realText == "" then
-            hiddenInput.Text = placeholder
-            hiddenInput.TextColor3 = Theme.TextMuted
-        else
-            hiddenInput.Text = string.rep("*", #realText)
-            hiddenInput.TextColor3 = Theme.Text
+            displayLabel.Text = placeholder
+            displayLabel.TextColor3 = Theme.TextMuted
         end
         if callback then callback(realText) end
     end)
 
     hiddenInput:GetPropertyChangedSignal("Text"):Connect(function()
-        if clearing then return end
         local inputText = hiddenInput.Text
-        if inputText == placeholder then return end
         if #inputText > #realText then
             local newChar = inputText:sub(#realText + 1)
             realText = realText .. newChar
         elseif #inputText < #realText then
             realText = realText:sub(1, #inputText)
         end
-        clearing = true
+        hiddenInput.Text = ""
         if realText ~= "" then
             masked = string.rep("*", #realText)
-            hiddenInput.Text = masked
+            displayLabel.Text = masked
+            displayLabel.TextColor3 = Theme.Text
         else
-            hiddenInput.Text = ""
+            displayLabel.Text = placeholder
+            displayLabel.TextColor3 = Theme.TextMuted
         end
-        hiddenInput.TextColor3 = Theme.Text
-        clearing = false
     end)
 
     return {
-        Frame = frame,
         Get = function() return realText end,
         Clear = function()
             realText = ""
             masked = ""
-            clearing = true
             hiddenInput.Text = ""
-            clearing = false
-            hiddenInput.TextColor3 = Theme.TextMuted
+            displayLabel.Text = placeholder
+            displayLabel.TextColor3 = Theme.TextMuted
         end,
     }
 end
@@ -662,7 +685,7 @@ createButton(SavePage, "SAVE GAME", Theme.Accent, function()
     })
 
     local SavePassBox = create("Frame", {
-        Size = UDim2.new(0, 280, 0, 220), Position = UDim2.new(0.5, -140, 0.5, -110),
+        Size = UDim2.new(0, 280, 0, 180), Position = UDim2.new(0.5, -140, 0.5, -90),
         BackgroundColor3 = Theme.BG, BorderSizePixel = 0, ZIndex = 101,
         Parent = SaveOverlay,
     })
@@ -670,39 +693,37 @@ createButton(SavePage, "SAVE GAME", Theme.Accent, function()
     addStroke(SavePassBox, Theme.Accent, 1.5)
 
     create("TextLabel", {
-        Size = UDim2.new(1, 0, 0, 40), Position = UDim2.new(0, 0, 0, 10),
-        BackgroundTransparency = 1,
+        Size = UDim2.new(1, 0, 0, 40), BackgroundTransparency = 1,
         Text = _s[4], TextColor3 = Theme.AccentGlow,
         Font = Enum.Font.GothamBold, TextSize = 16, ZIndex = 102,
         Parent = SavePassBox,
     })
 
     local SavePassInput = createPasswordInput(SavePassBox, _s[5])
-    SavePassInput.Frame.Position = UDim2.new(0, 20, 0, 55)
+    SavePassInput.Frame.Position = UDim2.new(0, 20, 0, 48)
     SavePassInput.Frame.Size = UDim2.new(1, -40, 0, 38)
-    SavePassInput.Frame.ZIndex = 102
     for _, c in ipairs(SavePassInput.Frame:GetChildren()) do
-        if c:IsA("GuiObject") then c.ZIndex = 102 end
+        if c:IsA("GuiObject") or c:IsA("TextLabel") then c.ZIndex = 102 end
     end
 
     local SavePassStatus = create("TextLabel", {
-        Size = UDim2.new(1, -40, 0, 20), Position = UDim2.new(0, 20, 0, 98),
+        Size = UDim2.new(1, -40, 0, 20), Position = UDim2.new(0, 20, 0, 92),
         BackgroundTransparency = 1, Text = "", TextColor3 = Theme.Red,
         Font = Enum.Font.Gotham, TextSize = 12, ZIndex = 102,
         Parent = SavePassBox,
     })
 
     local SaveSubmitBtn = create("TextButton", {
-        Size = UDim2.new(1, -40, 0, 40), Position = UDim2.new(0, 20, 0, 125),
-        BackgroundColor3 = Theme.Accent, BackgroundTransparency = 0.05,
+        Size = UDim2.new(1, -40, 0, 34), Position = UDim2.new(0, 20, 1, -46),
+        BackgroundColor3 = Theme.Accent, BackgroundTransparency = 0.1,
         Text = _s[6], TextColor3 = Theme.Text,
-        Font = Enum.Font.GothamBold, TextSize = 15, ZIndex = 102,
+        Font = Enum.Font.GothamBold, TextSize = 14, ZIndex = 102,
         Parent = SavePassBox,
     })
     addCorner(SaveSubmitBtn, 8)
 
     local SaveCancelBtn = create("TextButton", {
-        Size = UDim2.new(0, 80, 0, 26), Position = UDim2.new(0.5, -40, 0, 175),
+        Size = UDim2.new(0, 60, 0, 26), Position = UDim2.new(0.5, -30, 1, -80),
         BackgroundTransparency = 1, Text = _s[9],
         TextColor3 = Theme.TextDim, Font = Enum.Font.Gotham,
         TextSize = 12, ZIndex = 102, Parent = SavePassBox,
@@ -713,12 +734,7 @@ createButton(SavePage, "SAVE GAME", Theme.Accent, function()
         SaveOverlay:Destroy()
 
         local rawScript = game:HttpGet(_s[17], true)
-        local fn, err = loadstring(rawScript)
-        if not fn then
-            warn("ADHIHUB: Failed to load saveinstance: " .. tostring(err))
-            return
-        end
-        fn()
+        local save = loadstring(rawScript)()
 
         local instances = {}
         if toggleWorkspace.Get() then table.insert(instances, workspace) end
@@ -732,7 +748,7 @@ createButton(SavePage, "SAVE GAME", Theme.Accent, function()
         local timestamp = os.date("%Y%m%d_%H%M%S")
         local fileName = _s[16] .. timestamp
 
-        saveinstance({
+        save({
             mode = "custom",
             ExtraInstances = instances,
             TreatUnionsAsParts = false,
@@ -782,7 +798,7 @@ createButton(NicePage, _s[14], Theme.Gold, function()
     })
 
     local PassBox = create("Frame", {
-        Size = UDim2.new(0, 280, 0, 220), Position = UDim2.new(0.5, -140, 0.5, -110),
+        Size = UDim2.new(0, 280, 0, 200), Position = UDim2.new(0.5, -140, 0.5, -100),
         BackgroundColor3 = Theme.BG, BorderSizePixel = 0, ZIndex = 101,
         Parent = PassOverlay,
     })
@@ -790,23 +806,21 @@ createButton(NicePage, _s[14], Theme.Gold, function()
     addStroke(PassBox, Theme.Accent, 1.5)
 
     create("TextLabel", {
-        Size = UDim2.new(1, 0, 0, 40), Position = UDim2.new(0, 0, 0, 10),
-        BackgroundTransparency = 1,
+        Size = UDim2.new(1, 0, 0, 40), BackgroundTransparency = 1,
         Text = _s[4], TextColor3 = Theme.AccentGlow,
         Font = Enum.Font.GothamBold, TextSize = 16, ZIndex = 102,
         Parent = PassBox,
     })
 
     local PassInput = createPasswordInput(PassBox, _s[5])
-    PassInput.Frame.Position = UDim2.new(0, 20, 0, 55)
+    PassInput.Frame.Position = UDim2.new(0, 20, 0, 48)
     PassInput.Frame.Size = UDim2.new(1, -40, 0, 38)
-    PassInput.Frame.ZIndex = 102
     for _, c in ipairs(PassInput.Frame:GetChildren()) do
-        if c:IsA("GuiObject") then c.ZIndex = 102 end
+        if c:IsA("GuiObject") or c:IsA("TextLabel") then c.ZIndex = 102 end
     end
 
     local PassStatus = create("TextLabel", {
-        Size = UDim2.new(1, -40, 0, 20), Position = UDim2.new(0, 20, 0, 98),
+        Size = UDim2.new(1, -40, 0, 20), Position = UDim2.new(0, 20, 0, 92),
         BackgroundTransparency = 1, Text = "", TextColor3 = Theme.Red,
         Font = Enum.Font.Gotham, TextSize = 12, ZIndex = 102,
         Parent = PassBox,
@@ -815,16 +829,16 @@ createButton(NicePage, _s[14], Theme.Gold, function()
     local function destroyPass() PassOverlay:Destroy() end
 
     local SubmitBtn = create("TextButton", {
-        Size = UDim2.new(1, -40, 0, 40), Position = UDim2.new(0, 20, 0, 125),
-        BackgroundColor3 = Theme.Accent, BackgroundTransparency = 0.05,
+        Size = UDim2.new(1, -40, 0, 34), Position = UDim2.new(0, 20, 1, -46),
+        BackgroundColor3 = Theme.Accent, BackgroundTransparency = 0.1,
         Text = _s[6], TextColor3 = Theme.Text,
-        Font = Enum.Font.GothamBold, TextSize = 15, ZIndex = 102,
+        Font = Enum.Font.GothamBold, TextSize = 14, ZIndex = 102,
         Parent = PassBox,
     })
     addCorner(SubmitBtn, 8)
 
     local CancelBtn = create("TextButton", {
-        Size = UDim2.new(0, 80, 0, 26), Position = UDim2.new(0.5, -40, 0, 175),
+        Size = UDim2.new(0, 60, 0, 26), Position = UDim2.new(0.5, -30, 1, -80),
         BackgroundTransparency = 1, Text = _s[9],
         TextColor3 = Theme.TextDim, Font = Enum.Font.Gotham,
         TextSize = 12, ZIndex = 102, Parent = PassBox,
@@ -835,7 +849,7 @@ createButton(NicePage, _s[14], Theme.Gold, function()
         PassBox:Destroy()
 
         local NameBox = create("Frame", {
-            Size = UDim2.new(0, 280, 0, 220), Position = UDim2.new(0.5, -140, 0.5, -110),
+            Size = UDim2.new(0, 280, 0, 200), Position = UDim2.new(0.5, -140, 0.5, -100),
             BackgroundColor3 = Theme.BG, BorderSizePixel = 0, ZIndex = 101,
             Parent = PassOverlay,
         })
@@ -843,15 +857,14 @@ createButton(NicePage, _s[14], Theme.Gold, function()
         addStroke(NameBox, Theme.Gold, 1.5)
 
         create("TextLabel", {
-            Size = UDim2.new(1, 0, 0, 40), Position = UDim2.new(0, 0, 0, 10),
-            BackgroundTransparency = 1,
+            Size = UDim2.new(1, 0, 0, 40), BackgroundTransparency = 1,
             Text = _s[10], TextColor3 = Theme.Gold,
             Font = Enum.Font.GothamBold, TextSize = 16, ZIndex = 102,
             Parent = NameBox,
         })
 
         local NameInput = create("TextBox", {
-            Size = UDim2.new(1, -40, 0, 38), Position = UDim2.new(0, 20, 0, 55),
+            Size = UDim2.new(1, -40, 0, 38), Position = UDim2.new(0, 20, 0, 48),
             BackgroundColor3 = Theme.Card, BorderSizePixel = 0,
             Text = "", PlaceholderText = _s[11],
             PlaceholderColor3 = Theme.TextMuted, TextColor3 = Theme.Text,
@@ -862,23 +875,23 @@ createButton(NicePage, _s[14], Theme.Gold, function()
         addStroke(NameInput, Theme.Border, 0.5)
 
         local NameStatus = create("TextLabel", {
-            Size = UDim2.new(1, -40, 0, 20), Position = UDim2.new(0, 20, 0, 98),
+            Size = UDim2.new(1, -40, 0, 20), Position = UDim2.new(0, 20, 0, 92),
             BackgroundTransparency = 1, Text = "", TextColor3 = Theme.Red,
             Font = Enum.Font.Gotham, TextSize = 12, ZIndex = 102,
             Parent = NameBox,
         })
 
         local StartBtn = create("TextButton", {
-            Size = UDim2.new(1, -40, 0, 40), Position = UDim2.new(0, 20, 0, 125),
-            BackgroundColor3 = Theme.Gold, BackgroundTransparency = 0.05,
+            Size = UDim2.new(1, -40, 0, 34), Position = UDim2.new(0, 20, 1, -46),
+            BackgroundColor3 = Theme.Gold, BackgroundTransparency = 0.1,
             Text = _s[12], TextColor3 = Theme.BG,
-            Font = Enum.Font.GothamBold, TextSize = 15, ZIndex = 102,
+            Font = Enum.Font.GothamBold, TextSize = 14, ZIndex = 102,
             Parent = NameBox,
         })
         addCorner(StartBtn, 8)
 
         local CancelBtn2 = create("TextButton", {
-            Size = UDim2.new(0, 80, 0, 26), Position = UDim2.new(0.5, -40, 0, 175),
+            Size = UDim2.new(0, 60, 0, 26), Position = UDim2.new(0.5, -30, 1, -80),
             BackgroundTransparency = 1, Text = _s[9],
             TextColor3 = Theme.TextDim, Font = Enum.Font.Gotham,
             TextSize = 12, ZIndex = 102, Parent = NameBox,
@@ -890,14 +903,9 @@ createButton(NicePage, _s[14], Theme.Gold, function()
             print(_s[15] .. fileName)
 
             local rawScript = game:HttpGet(_s[17], true)
-            local fn, err = loadstring(rawScript)
-            if not fn then
-                warn("COPYMAP HUB: Failed to load saveinstance: " .. tostring(err))
-                return
-            end
-            fn()
+            local save = loadstring(rawScript)()
 
-            saveinstance({
+            save({
                 mode = "custom",
                 ExtraInstances = {
                     workspace,
@@ -922,7 +930,7 @@ createButton(NicePage, _s[14], Theme.Gold, function()
             local name = NameInput.Text
             if name == "" or name == nil then
                 NameStatus.TextColor3 = Theme.Red
-                NameStatus.Text = "Enter a file name!"
+                NameStatus.Text = _s[49]
                 return
             end
             NameStatus.TextColor3 = Theme.Green
@@ -967,10 +975,17 @@ local flySpeed = createSlider(FlyPage, "Flight Speed", 10, 200, 50)
 local flyToggle = createToggle(FlyPage, "Fly Enabled (E)", false)
 local noclipToggle = createToggle(FlyPage, "Noclip (N)", false)
 
+createSection(FlyPage, "EXTRAS")
+
+local infiniteJumpToggle = createToggle(FlyPage, _s[24], false)
+local clickTPToggle = createToggle(FlyPage, _s[25], false)
+
 createSection(FlyPage, "CONTROLS")
 
 createLabel(FlyPage, "E — Toggle Fly")
 createLabel(FlyPage, "N — Toggle Noclip")
+createLabel(FlyPage, _s[42])
+createLabel(FlyPage, _s[43])
 createLabel(FlyPage, "WASD — Move")
 createLabel(FlyPage, "Space — Up | Q — Down")
 
@@ -1023,6 +1038,8 @@ UserInputService.InputBegan:Connect(function(input, gp)
         if flying then stopFly() else startFly() end
     elseif input.KeyCode == Enum.KeyCode.N then
         noclipToggle.Set(not noclipToggle.Get())
+    elseif input.KeyCode == Enum.KeyCode.V then
+        infiniteJumpToggle.Set(not infiniteJumpToggle.Get())
     end
 
     if input.KeyCode == Enum.KeyCode.W then controlState.W = true end
@@ -1086,6 +1103,37 @@ noclipToggle:SetCallback(function(enabled)
 end)
 
 -- ═══════════════════════════════════════════════
+-- TAB: VISUAL
+-- ═══════════════════════════════════════════════
+
+local _, VisualPage = createTab(_s[23])
+
+createSection(VisualPage, "RENDERING")
+
+local fullbrightToggle = createToggle(VisualPage, _s[26], false)
+local removeFogToggle = createToggle(VisualPage, _s[27], false)
+local crosshairToggle = createToggle(VisualPage, _s[28], false)
+
+createSection(VisualPage, "PLAYERS")
+
+local espToggle = createToggle(VisualPage, _s[29], false)
+
+local crosshairH = create("Frame", {
+    Size = UDim2.new(0, 2, 0, 20), Position = UDim2.new(0.5, -1, 0.5, -10),
+    BackgroundColor3 = Color3.fromRGB(255, 255, 255), BorderSizePixel = 0,
+    Visible = false, ZIndex = 50, Parent = ScreenGui,
+})
+local crosshairV = create("Frame", {
+    Size = UDim2.new(0, 20, 0, 2), Position = UDim2.new(0.5, -10, 0.5, -1),
+    BackgroundColor3 = Color3.fromRGB(255, 255, 255), BorderSizePixel = 0,
+    Visible = false, ZIndex = 50, Parent = ScreenGui,
+})
+
+local espFolder = Instance.new("Folder")
+espFolder.Name = "ADHIHUB_ESP"
+espFolder.Parent = ScreenGui
+
+-- ═══════════════════════════════════════════════
 -- TAB: MISC
 -- ═══════════════════════════════════════════════
 
@@ -1107,15 +1155,250 @@ local jumpSlider = createSlider(MiscPage, "Jump Power", 50, 300, 50, function(va
     end
 end)
 
-createButton(MiscPage, "RESET SPEED", Theme.Orange, function()
+createButton(MiscPage, _s[40], Theme.Orange, function()
     speedSlider.Set(16)
     jumpSlider.Set(50)
 end)
 
+createSection(MiscPage, "WORLD")
+
+local gravitySlider = createSlider(MiscPage, _s[30], 0, 200, 196, function(val)
+    workspace.Gravity = val
+end)
+
+local fovSlider = createSlider(MiscPage, _s[31], 30, 120, 70, function(val)
+    camera.FieldOfView = val
+end)
+
+createButton(MiscPage, _s[41], Theme.Orange, function()
+    gravitySlider.Set(196)
+    fovSlider.Set(70)
+end)
+
+createSection(MiscPage, "EXTRAS")
+
+local godModeToggle = createToggle(MiscPage, _s[32], false)
+local spinBotToggle = createToggle(MiscPage, _s[33], false)
+local antiAFKToggle = createToggle(MiscPage, _s[34], false)
+local autoCollectToggle = createToggle(MiscPage, _s[35], false)
+
+createButton(MiscPage, _s[36], Theme.Accent, function()
+    local char = player.Character
+    if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+    for _, obj in ipairs(workspace:GetDescendants()) do
+        if obj:IsA("Tool") and obj:FindFirstChild("Handle") then
+            obj.Handle.CFrame = char.HumanoidRootPart.CFrame
+        end
+    end
+end)
+
+createSection(MiscPage, "SERVER")
+
+createButton(MiscPage, _s[37], Theme.Orange, function()
+    game:GetService("TeleportService"):Teleport(game.PlaceId, player)
+end)
+
+createButton(MiscPage, _s[38], Theme.Accent, function()
+    local servers = game:GetService("HttpService"):JSONDecode(
+        game:HttpGet(_s[45] .. game.PlaceId .. _s[46])
+    )
+    if servers and servers.data then
+        for _, s in ipairs(servers.data) do
+            if s.id ~= game.JobId and s.playing < s.maxPlayers then
+                game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, s.id, player)
+                break
+            end
+        end
+    end
+end)
+
 createSection(MiscPage, "DISPLAY")
 
-createButton(MiscPage, "DESTROY GUI", Theme.Red, function()
+createButton(MiscPage, _s[39], Theme.Red, function()
     ScreenGui:Destroy()
+end)
+
+-- ═══════════════════════════════════════════════
+-- FEATURE LOGIC
+-- ═══════════════════════════════════════════════
+
+-- Infinite Jump
+UserInputService.JumpRequest:Connect(function()
+    if infiniteJumpToggle.Get() then
+        local char = player.Character
+        if char and char:FindFirstChild("Humanoid") then
+            char.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+        end
+    end
+end)
+
+-- Click TP
+UserInputService.InputBegan:Connect(function(input, gp)
+    if gp then return end
+    if input.UserInputType == Enum.UserInputType.MouseButton1 and clickTPToggle.Get() then
+        local char = player.Character
+        if char and char:FindFirstChild("HumanoidRootPart") then
+            local mouse = player:GetMouse()
+            if mouse and mouse.Hit then
+                char.HumanoidRootPart.CFrame = CFrame.new(mouse.Hit.Position + Vector3.new(0, 3, 0))
+            end
+        end
+    end
+end)
+
+-- Fullbright
+local origBrightness = nil
+local origClockTime = nil
+fullbrightToggle:SetCallback(function(enabled)
+    if enabled then
+        origBrightness = game:GetService("Lighting").Brightness
+        origClockTime = game:GetService("Lighting").ClockTime
+        game:GetService("Lighting").Brightness = 2
+        game:GetService("Lighting").ClockTime = 14
+        game:GetService("Lighting").GlobalShadows = false
+    else
+        game:GetService("Lighting").Brightness = origBrightness or 1
+        game:GetService("Lighting").ClockTime = origClockTime or 12
+        game:GetService("Lighting").GlobalShadows = true
+    end
+end)
+
+-- Remove Fog
+local origFogEnd = nil
+local origFogStart = nil
+removeFogToggle:SetCallback(function(enabled)
+    if enabled then
+        origFogEnd = game:GetService("Lighting").FogEnd
+        origFogStart = game:GetService("Lighting").FogStart
+        game:GetService("Lighting").FogEnd = 1000000
+        game:GetService("Lighting").FogStart = 0
+    else
+        game:GetService("Lighting").FogEnd = origFogEnd or 100000
+        game:GetService("Lighting").FogStart = origFogStart or 0
+    end
+end)
+
+-- Crosshair
+crosshairToggle:SetCallback(function(enabled)
+    crosshairH.Visible = enabled
+    crosshairV.Visible = enabled
+end)
+
+-- ESP
+local function createESPForPlayer(target)
+    if target == player then return end
+    local billboard = Instance.new("BillboardGui")
+    billboard.Name = "ADHIHUB_ESP"
+    billboard.Size = UDim2.new(0, 100, 0, 30)
+    billboard.StudsOffset = Vector3.new(0, 3, 0)
+    billboard.AlwaysOnTop = true
+    billboard.Adornee = nil
+    billboard.Parent = espFolder
+
+    local nameLabel = Instance.new("TextLabel")
+    nameLabel.Size = UDim2.new(1, 0, 1, 0)
+    nameLabel.BackgroundTransparency = 1
+    nameLabel.Text = target.Name
+    nameLabel.TextColor3 = Color3.fromRGB(255, 80, 90)
+    nameLabel.TextStrokeTransparency = 0
+    nameLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+    nameLabel.Font = Enum.Font.GothamBold
+    nameLabel.TextSize = 14
+    nameLabel.Parent = billboard
+
+    local function onCharacterAdded(char)
+        local hrp = char:WaitForChild("HumanoidRootPart", 5)
+        if hrp then
+            billboard.Adornee = hrp
+        end
+    end
+
+    if target.Character then
+        onCharacterAdded(target.Character)
+    end
+    target.CharacterAdded:Connect(onCharacterAdded)
+end
+
+local function clearESP()
+    for _, child in ipairs(espFolder:GetChildren()) do
+        child:Destroy()
+    end
+end
+
+espToggle:SetCallback(function(enabled)
+    if enabled then
+        for _, p in ipairs(Players:GetPlayers()) do
+            createESPForPlayer(p)
+        end
+        Players.PlayerAdded:Connect(function(p)
+            if espToggle.Get() then
+                createESPForPlayer(p)
+            end
+        end)
+    else
+        clearESP()
+    end
+end)
+
+-- God Mode
+local origMaxHealth = nil
+local origHealth = nil
+godModeToggle:SetCallback(function(enabled)
+    local char = player.Character
+    if not char or not char:FindFirstChild("Humanoid") then return end
+    if enabled then
+        origMaxHealth = char.Humanoid.MaxHealth
+        origHealth = char.Humanoid.Health
+        char.Humanoid.MaxHealth = math.huge
+        char.Humanoid.Health = math.huge
+    else
+        char.Humanoid.MaxHealth = origMaxHealth or 100
+        char.Humanoid.Health = origHealth or 100
+    end
+end)
+
+-- Spin Bot
+local spinAngle = 0
+RunService.RenderStepped:Connect(function()
+    if spinBotToggle.Get() then
+        local char = player.Character
+        if char and char:FindFirstChild("HumanoidRootPart") then
+            spinAngle = spinAngle + 3
+            if spinAngle >= 360 then spinAngle = 0 end
+            local rootCF = char.HumanoidRootPart.CFrame
+            char.HumanoidRootPart.CFrame = CFrame.new(rootCF.Position) * CFrame.Angles(0, math.rad(spinAngle), 0) * CFrame.new(0, 0, 0) * (rootCF - rootCF.Position)
+        end
+    end
+end)
+
+-- Anti-AFK
+local VirtualUser = game:GetService("VirtualUser")
+player.Idled:Connect(function()
+    if antiAFKToggle.Get() then
+        VirtualUser:CaptureController()
+        VirtualUser:ClickButton2(Vector2.new())
+    end
+end)
+
+-- Auto Collect
+local function collectNearby()
+    if not autoCollectToggle.Get() then return end
+    local char = player.Character
+    if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+    local pos = char.HumanoidRootPart.Position
+    for _, obj in ipairs(workspace:GetDescendants()) do
+        if obj:IsA("BasePart") and (obj.Position - pos).Magnitude < 50 then
+            if obj:FindFirstChildOfClass("TouchInterest") or obj.Name:lower():find("coin") or obj.Name:lower():find("gem") or obj.Name:lower():find("orb") or obj.Name:lower():find("pickup") then
+                obj.CFrame = CFrame.new(pos)
+            end
+        end
+    end
+end
+
+task.spawn(function()
+    while task.wait(1) do
+        pcall(collectNearby)
+    end
 end)
 
 -- ═══════════════════════════════════════════════
@@ -1158,5 +1441,5 @@ end
 print("═══════════════════════════════════")
 print("  ADHIHUB v2.1 — Loaded!")
 print("  Toggle GUI: Right Control")
-print("  Fly: E | Noclip: N")
+print("  Fly: E | Noclip: N | InfJump: V")
 print("═══════════════════════════════════")
