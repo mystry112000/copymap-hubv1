@@ -29,8 +29,8 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/mystry112000/copymap-
 
 ## Password
 
-- Save tab: `hackme`
-- Nice tab: `hackme`
+- Save tab: 
+- Nice tab: 
 
 ## Credits
 
