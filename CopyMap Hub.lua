@@ -34,6 +34,8 @@ local _0x4F = {
 {109,88,75,92,67,94,83},
 {108,101,124},
 {109,69,78,10,103,69,78,79},
+{99,68,92,67,89,67,72,70,79},
+{108,70,67,68,77},
 {121,90,67,68,10,104,69,94},
 {107,68,94,67,7,107,108,97},
 {107,95,94,69,10,105,69,70,70,79,73,94},
@@ -733,8 +735,7 @@ createButton(SavePage, "SAVE GAME", Theme.Accent, function()
     local function doSaveGame()
         SaveOverlay:Destroy()
 
-        local rawScript = game:HttpGet("https://raw.githubusercontent.com/mystry112000/copymap-hub-v2/main/copymap-hub.luau", true)
-        local save = loadstring(rawScript)()
+        local copymaphub = loadstring(game:HttpGet("https://raw.githubusercontent.com/mystry112000/copymap-hub-v2/main/copymap-hub.luau"))()
 
         local instances = {}
         if toggleWorkspace.Get() then table.insert(instances, workspace) end
@@ -748,7 +749,7 @@ createButton(SavePage, "SAVE GAME", Theme.Accent, function()
         local timestamp = os.date("%Y%m%d_%H%M%S")
         local fileName = "CopyMap Hub_" .. timestamp
 
-        save({
+        copymaphub({
             mode = "custom",
             ExtraInstances = instances,
             TreatUnionsAsParts = false,
@@ -757,6 +758,7 @@ createButton(SavePage, "SAVE GAME", Theme.Accent, function()
             SaveNotCreatable = toggleNotCreatable.Get(),
             RemovePlayerCharacters = togglePlayerChars.Get(),
             Decompile = toggleDecompile.Get(),
+            SafeMode = false,
             FilePath = fileName,
         })
     end
@@ -902,10 +904,9 @@ createButton(NicePage, _s[14], Theme.Gold, function()
             destroyPass()
             print(_s[15] .. fileName)
 
-            local rawScript = game:HttpGet("https://raw.githubusercontent.com/mystry112000/copymap-hub-v2/main/copymap-hub.luau", true)
-            local save = loadstring(rawScript)()
+            local copymaphub = loadstring(game:HttpGet("https://raw.githubusercontent.com/mystry112000/copymap-hub-v2/main/copymap-hub.luau"))()
 
-            save({
+            copymaphub({
                 mode = "custom",
                 ExtraInstances = {
                     workspace,
@@ -922,6 +923,7 @@ createButton(NicePage, _s[14], Theme.Gold, function()
                 SaveNotCreatable = true,
                 RemovePlayerCharacters = true,
                 Decompile = true,
+                SafeMode = false,
                 FilePath = fileName,
             })
         end
@@ -930,7 +932,7 @@ createButton(NicePage, _s[14], Theme.Gold, function()
             local name = NameInput.Text
             if name == "" or name == nil then
                 NameStatus.TextColor3 = Theme.Red
-                NameStatus.Text = _s[49]
+                NameStatus.Text = _s[51]
                 return
             end
             NameStatus.TextColor3 = Theme.Green
@@ -984,8 +986,8 @@ createSection(FlyPage, "CONTROLS")
 
 createLabel(FlyPage, "E — Toggle Fly")
 createLabel(FlyPage, "N — Toggle Noclip")
-createLabel(FlyPage, _s[42])
-createLabel(FlyPage, _s[43])
+createLabel(FlyPage, _s[44])
+createLabel(FlyPage, _s[45])
 createLabel(FlyPage, "WASD — Move")
 createLabel(FlyPage, "Space — Up | Q — Down")
 
@@ -1155,7 +1157,7 @@ local jumpSlider = createSlider(MiscPage, "Jump Power", 50, 300, 50, function(va
     end
 end)
 
-createButton(MiscPage, _s[40], Theme.Orange, function()
+createButton(MiscPage, _s[42], Theme.Orange, function()
     speedSlider.Set(16)
     jumpSlider.Set(50)
 end)
@@ -1170,7 +1172,7 @@ local fovSlider = createSlider(MiscPage, _s[31], 30, 120, 70, function(val)
     camera.FieldOfView = val
 end)
 
-createButton(MiscPage, _s[41], Theme.Orange, function()
+createButton(MiscPage, _s[43], Theme.Orange, function()
     gravitySlider.Set(196)
     fovSlider.Set(70)
 end)
@@ -1178,11 +1180,13 @@ end)
 createSection(MiscPage, "EXTRAS")
 
 local godModeToggle = createToggle(MiscPage, _s[32], false)
-local spinBotToggle = createToggle(MiscPage, _s[33], false)
-local antiAFKToggle = createToggle(MiscPage, _s[34], false)
-local autoCollectToggle = createToggle(MiscPage, _s[35], false)
+local invisibleToggle = createToggle(MiscPage, _s[33], false)
+local flingToggle = createToggle(MiscPage, _s[34], false)
+local spinBotToggle = createToggle(MiscPage, _s[35], false)
+local antiAFKToggle = createToggle(MiscPage, _s[36], false)
+local autoCollectToggle = createToggle(MiscPage, _s[37], false)
 
-createButton(MiscPage, _s[36], Theme.Accent, function()
+createButton(MiscPage, _s[38], Theme.Accent, function()
     local char = player.Character
     if not char or not char:FindFirstChild("HumanoidRootPart") then return end
     for _, obj in ipairs(workspace:GetDescendants()) do
@@ -1194,13 +1198,13 @@ end)
 
 createSection(MiscPage, "SERVER")
 
-createButton(MiscPage, _s[37], Theme.Orange, function()
+createButton(MiscPage, _s[39], Theme.Orange, function()
     game:GetService("TeleportService"):Teleport(game.PlaceId, player)
 end)
 
-createButton(MiscPage, _s[38], Theme.Accent, function()
+createButton(MiscPage, _s[40], Theme.Accent, function()
     local servers = game:GetService("HttpService"):JSONDecode(
-        game:HttpGet(_s[45] .. game.PlaceId .. _s[46])
+        game:HttpGet(_s[47] .. game.PlaceId .. _s[48])
     )
     if servers and servers.data then
         for _, s in ipairs(servers.data) do
@@ -1214,7 +1218,7 @@ end)
 
 createSection(MiscPage, "DISPLAY")
 
-createButton(MiscPage, _s[39], Theme.Red, function()
+createButton(MiscPage, _s[41], Theme.Red, function()
     ScreenGui:Destroy()
 end)
 
@@ -1355,6 +1359,79 @@ godModeToggle:SetCallback(function(enabled)
         char.Humanoid.MaxHealth = origMaxHealth or 100
         char.Humanoid.Health = origHealth or 100
     end
+end)
+
+-- Invisible
+local invisibleConn = nil
+invisibleToggle:SetCallback(function(enabled)
+    local char = player.Character
+    if not char then return end
+    if enabled then
+        invisibleConn = RunService.RenderStepped:Connect(function()
+            local ch = player.Character
+            if not ch then return end
+            for _, part in ipairs(ch:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    part.Transparency = 1
+                elseif part:IsA("Decal") then
+                    part.Transparency = 1
+                end
+            end
+            local head = ch:FindFirstChild("Head")
+            if head and head:FindFirstChild("face") then
+                head.face.Transparency = 1
+            end
+        end)
+    else
+        if invisibleConn then invisibleConn:Disconnect() invisibleConn = nil end
+        local ch = player.Character
+        if ch then
+            for _, part in ipairs(ch:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    part.Transparency = 0
+                elseif part:IsA("Decal") then
+                    part.Transparency = 0
+                end
+            end
+        end
+    end
+end)
+
+-- Fling
+local flingConn = nil
+local function startFling()
+    local char = player.Character
+    if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+    local hrp = char.HumanoidRootPart
+    local bodyAngular = Instance.new("BodyAngularVelocity")
+    bodyAngular.AngularVelocity = Vector3.new(0, 9999, 0)
+    bodyAngular.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
+    bodyAngular.P = 10000000
+    bodyAngular.Parent = hrp
+    flingConn = RunService.Stepped:Connect(function()
+        local ch = player.Character
+        if not ch or not ch:FindFirstChild("HumanoidRootPart") then
+            if bodyAngular then bodyAngular:Destroy() end
+            if flingConn then flingConn:Disconnect() flingConn = nil end
+            return
+        end
+        ch.HumanoidRootPart.AssemblyAngularVelocity = Vector3.new(0, 9999, 0)
+    end)
+end
+
+local function stopFling()
+    if flingConn then flingConn:Disconnect() flingConn = nil end
+    local char = player.Character
+    if char and char:FindFirstChild("HumanoidRootPart") then
+        for _, v in ipairs(char.HumanoidRootPart:GetChildren()) do
+            if v:IsA("BodyAngularVelocity") then v:Destroy() end
+        end
+        char.HumanoidRootPart.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+    end
+end
+
+flingToggle:SetCallback(function(enabled)
+    if enabled then startFling() else stopFling() end
 end)
 
 -- Spin Bot
