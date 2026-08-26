@@ -687,7 +687,7 @@ createButton(SavePage, "SAVE GAME", Theme.Accent, function()
     })
 
     local SavePassBox = create("Frame", {
-        Size = UDim2.new(0, 280, 0, 180), Position = UDim2.new(0.5, -140, 0.5, -90),
+        Size = UDim2.new(0, 280, 0, 220), Position = UDim2.new(0.5, -140, 0.5, -110),
         BackgroundColor3 = Theme.BG, BorderSizePixel = 0, ZIndex = 101,
         Parent = SaveOverlay,
     })
@@ -695,7 +695,8 @@ createButton(SavePage, "SAVE GAME", Theme.Accent, function()
     addStroke(SavePassBox, Theme.Accent, 1.5)
 
     create("TextLabel", {
-        Size = UDim2.new(1, 0, 0, 40), BackgroundTransparency = 1,
+        Size = UDim2.new(1, 0, 0, 40), Position = UDim2.new(0, 0, 0, 0),
+        BackgroundTransparency = 1,
         Text = _s[4], TextColor3 = Theme.AccentGlow,
         Font = Enum.Font.GothamBold, TextSize = 16, ZIndex = 102,
         Parent = SavePassBox,
@@ -716,7 +717,7 @@ createButton(SavePage, "SAVE GAME", Theme.Accent, function()
     })
 
     local SaveSubmitBtn = create("TextButton", {
-        Size = UDim2.new(1, -40, 0, 34), Position = UDim2.new(0, 20, 1, -46),
+        Size = UDim2.new(1, -40, 0, 34), Position = UDim2.new(0, 20, 0, 120),
         BackgroundColor3 = Theme.Accent, BackgroundTransparency = 0.1,
         Text = _s[6], TextColor3 = Theme.Text,
         Font = Enum.Font.GothamBold, TextSize = 14, ZIndex = 102,
@@ -725,7 +726,7 @@ createButton(SavePage, "SAVE GAME", Theme.Accent, function()
     addCorner(SaveSubmitBtn, 8)
 
     local SaveCancelBtn = create("TextButton", {
-        Size = UDim2.new(0, 60, 0, 26), Position = UDim2.new(0.5, -30, 1, -80),
+        Size = UDim2.new(1, -40, 0, 26), Position = UDim2.new(0, 20, 0, 162),
         BackgroundTransparency = 1, Text = _s[9],
         TextColor3 = Theme.TextDim, Font = Enum.Font.Gotham,
         TextSize = 12, ZIndex = 102, Parent = SavePassBox,
@@ -800,7 +801,7 @@ createButton(NicePage, _s[14], Theme.Gold, function()
     })
 
     local PassBox = create("Frame", {
-        Size = UDim2.new(0, 280, 0, 200), Position = UDim2.new(0.5, -140, 0.5, -100),
+        Size = UDim2.new(0, 280, 0, 220), Position = UDim2.new(0.5, -140, 0.5, -110),
         BackgroundColor3 = Theme.BG, BorderSizePixel = 0, ZIndex = 101,
         Parent = PassOverlay,
     })
@@ -808,7 +809,8 @@ createButton(NicePage, _s[14], Theme.Gold, function()
     addStroke(PassBox, Theme.Accent, 1.5)
 
     create("TextLabel", {
-        Size = UDim2.new(1, 0, 0, 40), BackgroundTransparency = 1,
+        Size = UDim2.new(1, 0, 0, 40), Position = UDim2.new(0, 0, 0, 0),
+        BackgroundTransparency = 1,
         Text = _s[4], TextColor3 = Theme.AccentGlow,
         Font = Enum.Font.GothamBold, TextSize = 16, ZIndex = 102,
         Parent = PassBox,
@@ -831,7 +833,7 @@ createButton(NicePage, _s[14], Theme.Gold, function()
     local function destroyPass() PassOverlay:Destroy() end
 
     local SubmitBtn = create("TextButton", {
-        Size = UDim2.new(1, -40, 0, 34), Position = UDim2.new(0, 20, 1, -46),
+        Size = UDim2.new(1, -40, 0, 34), Position = UDim2.new(0, 20, 0, 120),
         BackgroundColor3 = Theme.Accent, BackgroundTransparency = 0.1,
         Text = _s[6], TextColor3 = Theme.Text,
         Font = Enum.Font.GothamBold, TextSize = 14, ZIndex = 102,
@@ -840,7 +842,7 @@ createButton(NicePage, _s[14], Theme.Gold, function()
     addCorner(SubmitBtn, 8)
 
     local CancelBtn = create("TextButton", {
-        Size = UDim2.new(0, 60, 0, 26), Position = UDim2.new(0.5, -30, 1, -80),
+        Size = UDim2.new(1, -40, 0, 26), Position = UDim2.new(0, 20, 0, 162),
         BackgroundTransparency = 1, Text = _s[9],
         TextColor3 = Theme.TextDim, Font = Enum.Font.Gotham,
         TextSize = 12, ZIndex = 102, Parent = PassBox,
@@ -851,7 +853,7 @@ createButton(NicePage, _s[14], Theme.Gold, function()
         PassBox:Destroy()
 
         local NameBox = create("Frame", {
-            Size = UDim2.new(0, 280, 0, 200), Position = UDim2.new(0.5, -140, 0.5, -100),
+            Size = UDim2.new(0, 280, 0, 220), Position = UDim2.new(0.5, -140, 0.5, -110),
             BackgroundColor3 = Theme.BG, BorderSizePixel = 0, ZIndex = 101,
             Parent = PassOverlay,
         })
@@ -859,7 +861,8 @@ createButton(NicePage, _s[14], Theme.Gold, function()
         addStroke(NameBox, Theme.Gold, 1.5)
 
         create("TextLabel", {
-            Size = UDim2.new(1, 0, 0, 40), BackgroundTransparency = 1,
+            Size = UDim2.new(1, 0, 0, 40), Position = UDim2.new(0, 0, 0, 0),
+            BackgroundTransparency = 1,
             Text = _s[10], TextColor3 = Theme.Gold,
             Font = Enum.Font.GothamBold, TextSize = 16, ZIndex = 102,
             Parent = NameBox,
@@ -884,7 +887,7 @@ createButton(NicePage, _s[14], Theme.Gold, function()
         })
 
         local StartBtn = create("TextButton", {
-            Size = UDim2.new(1, -40, 0, 34), Position = UDim2.new(0, 20, 1, -46),
+            Size = UDim2.new(1, -40, 0, 34), Position = UDim2.new(0, 20, 0, 120),
             BackgroundColor3 = Theme.Gold, BackgroundTransparency = 0.1,
             Text = _s[12], TextColor3 = Theme.BG,
             Font = Enum.Font.GothamBold, TextSize = 14, ZIndex = 102,
@@ -893,7 +896,7 @@ createButton(NicePage, _s[14], Theme.Gold, function()
         addCorner(StartBtn, 8)
 
         local CancelBtn2 = create("TextButton", {
-            Size = UDim2.new(0, 60, 0, 26), Position = UDim2.new(0.5, -30, 1, -80),
+            Size = UDim2.new(1, -40, 0, 26), Position = UDim2.new(0, 20, 0, 162),
             BackgroundTransparency = 1, Text = _s[9],
             TextColor3 = Theme.TextDim, Font = Enum.Font.Gotham,
             TextSize = 12, ZIndex = 102, Parent = NameBox,
